@@ -47,13 +47,30 @@ a2 = [ones(m,1), a2] ;
 z3 = a2*Theta2' ;
 a3 = sigmoid(z3);
 
+unr_J = 0 ;
 for i=1:m,
     for k=1:K,
-        J = J +( ( ( -(y(i)==k)) * log(  a3(i,k)) ) - ... 
+        unr_J = unr_J + ...
+               ( ( ( -(y(i)==k)) * log(  a3(i,k)) ) - ... 
                  ( (1-(y(i)==k)) * log(1-a3(i,k)) ) ) ;
     end;
 end;
-J = (1/m) * J ;
+unr_J = (1/m) * unr_J ;
+
+reg_J = 0 ;
+for j=1:hidden_layer_size,
+    for k=2:input_layer_size+1,
+        reg_J = reg_J + Theta1(j,k)^2 ;
+    end;
+end;
+for j=1:num_labels,
+    for k=2:hidden_layer_size+1,
+        reg_J = reg_J + Theta2(j,k)^2 ;
+    end;
+end;
+reg_J = (lambda/(2*m))*reg_J;
+
+J = unr_J + reg_J ;
 
 %
 % Part 2: Implement the backpropagation algorithm to compute the gradients
