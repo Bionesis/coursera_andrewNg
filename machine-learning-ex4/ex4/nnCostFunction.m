@@ -40,8 +40,8 @@ Theta2_grad = zeros(size(Theta2));
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
 
-X = [ones(m,1), X] ;
-z2 = X*Theta1' ;
+a1 = [ones(m,1), X] ;
+z2 = a1*Theta1' ;
 a2 = sigmoid(z2) ;
 a2 = [ones(m,1), a2] ;
 z3 = a2*Theta2' ;
@@ -88,6 +88,41 @@ J = unr_J + reg_J ;
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
+
+Delta2 = zeros(num_labels,hidden_layer_size+1);
+Delta1 = zeros(hidden_layer_size,input_layer_size+1);
+for t = 1:m,
+    % Step 1
+    a1 = [1; X(t,:)'];
+    z2 = Theta1 * a1 ; z2 = [1; z2] ;
+    a2 = sigmoid(z2) ; 
+    z3 = Theta2 * a2 ;
+    a3 = sigmoid(z3) ;
+    
+    % Step 2
+    delta3 = a3 - ((1:num_labels)' == y(t));
+    
+    % Step 3
+    delta2 = Theta2' * delta3 .* sigmoidGradient(z2) ;
+    delta2 = delta2(2:end);
+    
+    
+    % Step 4
+    Delta2 = Delta2 + delta3 * a2' ;
+    Delta1 = Delta1 + delta2 * a1' ;
+       
+end;
+Theta1_grad = (1/m) * Delta1 ;
+Theta2_grad = (1/m) * Delta2 ;
+
+
+
+
+
+
+
+
+
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
