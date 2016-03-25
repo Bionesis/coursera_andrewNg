@@ -94,16 +94,18 @@ Delta1 = zeros(hidden_layer_size,input_layer_size+1);
 for t = 1:m,
     % Step 1
     a1 = [1; X(t,:)'];
-    z2 = Theta1 * a1 ; z2 = [1; z2] ;
+    z2 = Theta1 * a1 ; 
     a2 = sigmoid(z2) ; 
+    a2 = [1; a2] ;
     z3 = Theta2 * a2 ;
     a3 = sigmoid(z3) ;
+
     
     % Step 2
     delta3 = a3 - ((1:num_labels)' == y(t));
     
     % Step 3
-    delta2 = Theta2' * delta3 .* sigmoidGradient(z2) ;
+    delta2 = Theta2' * delta3 .* ( a2.*(1-a2)) ;
     delta2 = delta2(2:end);
     
     
