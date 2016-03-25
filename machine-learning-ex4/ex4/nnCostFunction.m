@@ -99,7 +99,6 @@ for t = 1:m,
     a2 = [1; a2] ;
     z3 = Theta2 * a2 ;
     a3 = sigmoid(z3) ;
-
     
     % Step 2
     delta3 = a3 - ((1:num_labels)' == y(t));
@@ -117,14 +116,6 @@ end;
 Theta1_grad = (1/m) * Delta1 ;
 Theta2_grad = (1/m) * Delta2 ;
 
-
-
-
-
-
-
-
-
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
@@ -133,7 +124,16 @@ Theta2_grad = (1/m) * Delta2 ;
 %               and Theta2_grad from Part 2.
 %
 
-
+for i=1:hidden_layer_size,
+    for j=2:input_layer_size+1,
+        Theta1_grad(i,j) = Theta1_grad(i,j) + (lambda/m)*Theta1(i,j);
+    end;
+end;
+for i=1:num_labels,
+    for j=2:hidden_layer_size+1,
+        Theta2_grad(i,j) = Theta2_grad(i,j) + (lambda/m)*Theta2(i,j);
+    end;
+end;
 
 
 
